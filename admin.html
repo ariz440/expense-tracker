@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - SmartSpend</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><i class="fas fa-chart-line"></i><h2>SmartSpend <span class="admin-badge-text">Admin</span></h2></div>
+                <button class="mobile-close" id="closeSidebar">&times;</button>
+            </div>
+            <div class="user-profile admin-profile">
+                <div class="avatar"><i class="fas fa-shield-alt"></i></div>
+                <div class="user-info"><h4 id="adminName">Admin</h4><p id="adminEmail"></p></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="overview"><i class="fas fa-tachometer-alt"></i><span>Overview</span></a>
+                <a href="#" class="nav-item" data-page="users"><i class="fas fa-users"></i><span>Manage Users</span></a>
+                <a href="#" class="nav-item" data-page="expenses"><i class="fas fa-globe"></i><span>All Expenses</span></a>
+                <a href="#" class="nav-item" data-page="analytics"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="total-card"><p>System Total</p><h3>₹<span id="systemTotal">0</span></h3></div>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="top-bar">
+                <button class="mobile-menu" id="openSidebar"><i class="fas fa-bars"></i></button>
+                <div class="page-title"><h1>Admin Dashboard</h1><p>Manage users and expenses</p></div>
+                <div class="header-stats">
+                    <div class="stat-badge"><i class="fas fa-users"></i><div><small>Users</small><h4 id="totalUsers">0</h4></div></div>
+                    <div class="stat-badge"><i class="fas fa-receipt"></i><div><small>Expenses</small><h4 id="totalExpensesCount">0</h4></div></div>
+                </div>
+            </header>
+            
+            <div id="overviewView" class="view active">
+                <div class="card"><div class="card-header"><h3><i class="fas fa-chart-bar"></i> System Overview</h3></div><div class="card-body"><canvas id="systemChart" class="chart-canvas"></canvas></div></div>
+                <div class="card"><div class="card-header"><h3><i class="fas fa-clock"></i> Recent Activities</h3></div><div class="card-body"><div id="recentActivities" class="activities-list"></div></div></div>
+            </div>
+            
+            <div id="usersView" class="view">
+                <div class="card"><div class="card-header"><h3><i class="fas fa-users"></i> All Users</h3><button id="exportUsersBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button></div><div class="card-body"><div id="usersList" class="users-list"></div></div></div>
+            </div>
+            
+            <div id="expensesView" class="view">
+                <div class="card"><div class="card-header"><h3><i class="fas fa-filter"></i> Filter Expenses</h3></div><div class="card-body"><div class="filter-row"><input type="date" id="adminStartDate"><input type="date" id="adminEndDate"><select id="adminFilterUser"><option value="all">All Users</option></select><select id="adminFilterCategory"><option value="all">All Categories</option><option value="Food">🍔 Food</option><option value="Transport">🚗 Transport</option><option value="Shopping">🛍️ Shopping</option><option value="Bills">💡 Bills</option><option value="Entertainment">🎬 Entertainment</option><option value="Health">💊 Health</option><option value="Other">📌 Other</option></select><button id="adminApplyFilterBtn" class="btn-secondary">Apply</button></div></div></div>
+                <div class="card"><div class="card-header"><h3><i class="fas fa-list"></i> All Expenses</h3><button id="exportExpensesBtn" class="btn-secondary"><i class="fas fa-download"></i> Export</button></div><div class="card-body"><div id="allExpensesList" class="expenses-list"></div></div></div>
+            </div>
+            
+            <div id="analyticsView" class="view">
+                <div class="card"><div class="card-header"><h3><i class="fas fa-chart-pie"></i> Category Distribution</h3></div><div class="card-body"><canvas id="adminCategoryChart" class="chart-canvas"></canvas></div></div>
+                <div class="card"><div class="card-header"><h3><i class="fas fa-trophy"></i> Top Spenders</h3></div><div class="card-body"><div id="topSpenders" class="top-spenders"></div></div></div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>User Details</h3><span class="close">&times;</span></div><div class="modal-body"><div id="userDetails"></div></div><div class="modal-footer"><button id="deleteUserBtn" class="btn-danger">Delete User</button></div></div></div>
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

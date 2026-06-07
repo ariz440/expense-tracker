@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SmartSpend</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>SmartSpend</h2>
+                </div>
+                <button class="mobile-close" id="closeSidebar">&times;</button>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar" id="sidebarAvatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userEmail"></p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-home"></i> <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="analytics">
+                    <i class="fas fa-chart-pie"></i> <span>Analytics</span>
+                </a>
+                <a href="#" class="nav-item" data-page="profile">
+                    <i class="fas fa-user"></i> <span>Profile</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="total-card">
+                    <p>Total Spent</p>
+                    <h3>₹<span id="sidebarTotal">0</span></h3>
+                </div>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="top-bar">
+                <button class="mobile-menu" id="openSidebar"><i class="fas fa-bars"></i></button>
+                <div class="page-title">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, <span id="welcomeName"></span></p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-badge"><i class="fas fa-receipt"></i><div><small>Expenses</small><h4 id="totalExpensesCount">0</h4></div></div>
+                    <div class="stat-badge"><i class="fas fa-calendar"></i><div><small>This Month</small><h4 id="monthlyTotal">₹0</h4></div></div>
+                </div>
+            </header>
+            
+            <div id="dashboardView" class="view active">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-plus-circle"></i> Add New Expense</h3></div>
+                    <div class="card-body">
+                        <form id="expenseForm" class="expense-form">
+                            <div class="form-row">
+                                <div class="form-group"><i class="fas fa-tag"></i><input type="text" id="expenseName" placeholder="Expense name"></div>
+                                <div class="form-group"><i class="fas fa-rupee-sign"></i><input type="number" id="expenseAmount" placeholder="Amount"></div>
+                                <div class="form-group"><i class="fas fa-layer-group"></i>
+                                    <select id="expenseCategory">
+                                        <option value="Food">🍔 Food</option><option value="Transport">🚗 Transport</option>
+                                        <option value="Shopping">🛍️ Shopping</option><option value="Bills">💡 Bills</option>
+                                        <option value="Entertainment">🎬 Entertainment</option><option value="Health">💊 Health</option>
+                                        <option value="Other">📌 Other</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-filter"></i> Filter Expenses</h3></div>
+                    <div class="card-body">
+                        <div class="filter-row">
+                            <input type="date" id="startDate"><input type="date" id="endDate">
+                            <select id="filterCategory"><option value="all">All Categories</option>
+                                <option value="Food">🍔 Food</option><option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option><option value="Bills">💡 Bills</option>
+                                <option value="Entertainment">🎬 Entertainment</option><option value="Health">💊 Health</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                            <button id="applyFilterBtn" class="btn-secondary">Apply</button>
+                            <button id="resetFilterBtn" class="btn-outline">Reset</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-list"></i> Recent Expenses</h3><button id="clearAllBtn" class="btn-danger">Clear All</button></div>
+                    <div class="card-body"><div id="expensesList" class="expenses-list"></div></div>
+                </div>
+            </div>
+            
+            <div id="analyticsView" class="view">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-pie"></i> Expense Distribution</h3></div>
+                    <div class="card-body"><canvas id="expenseChart" class="chart-canvas"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Category Summary</h3></div>
+                    <div class="card-body"><div id="categorySummary" class="category-summary"></div></div>
+                </div>
+            </div>
+            
+            <div id="profileView" class="view">
+                <div class="card">
+                    <div class="card-header"><h3><i class="fas fa-user-circle"></i> Profile Information</h3></div>
+                    <div class="card-body">
+                        <div class="profile-info">
+                            <div class="profile-avatar" id="profileAvatarContainer">
+                                <img id="profileAvatar" class="profile-avatar-img" style="display:none;">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <div class="profile-details">
+                                <div class="info-row"><label>Full Name</label><div class="info-value"><span id="profileName"></span><button id="editNameBtn" class="icon-btn"><i class="fas fa-edit"></i></button></div></div>
+                                <div class="info-row"><label>Email Address</label><div class="info-value"><span id="profileEmail"></span></div></div>
+                                <div class="info-row"><label>Profile Photo</label><div class="info-value">
+                                    <button id="boyPhotoBtn" class="photo-select-btn"><i class="fas fa-mars"></i> Boy 👦</button>
+                                    <button id="girlPhotoBtn" class="photo-select-btn"><i class="fas fa-venus"></i> Girl 👧</button>
+                                </div></div>
+                                <div class="info-row"><label>Member Since</label><div class="info-value"><span id="profileMemberSince"></span></div></div>
+                                <div class="info-row"><label>Total Spent</label><div class="info-value"><span id="profileTotalSpent">₹0</span></div></div>
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button id="changePasswordBtn" class="btn-secondary"><i class="fas fa-key"></i> Change Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"><h3>Change Password</h3><span class="close">&times;</span></div>
+            <div class="modal-body">
+                <div class="form-group"><i class="fas fa-lock"></i><input type="password" id="currentPassword" placeholder="Current Password"></div>
+                <div class="form-group"><i class="fas fa-key"></i><input type="password" id="newPassword" placeholder="New Password (6+ characters)"></div>
+                <div class="form-group"><i class="fas fa-check-circle"></i><input type="password" id="confirmNewPassword" placeholder="Confirm New Password"></div>
+            </div>
+            <div class="modal-footer"><button id="updatePasswordBtn" class="btn-primary">Update Password</button></div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"><i class="fas fa-check-circle"></i><span id="toastMessage">Success!</span></div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
